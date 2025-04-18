@@ -4,90 +4,74 @@ Vue 源码混淆工具 - 保护你的 Vue 应用免受逆向工程的威胁
 
 ## 项目简介
 
-VueCodeObfuscation 是一个专为 Vue.js 应用设计的代码混淆工具，通过多种混淆技术使您的源代码难以被理解和逆向工程，同时保持应用的正常功能。
+VueCodeObfuscation 是一个专为 Vue.js 应用设计的代码混淆工具，能够自动处理项目中的 JS 和 Vue 文件，通过混淆技术使代码难以被分析和逆向工程，同时保持应用的正常功能。
 
 ## 功能特点
 
+- **自动处理 Vue 文件**：智能识别并混淆 Vue 文件中的 JavaScript 代码
+- **智能模式检测**：自动检测复杂语法结构并使用安全模式处理
+- **文件备份功能**：支持自动备份原始文件，确保安全
+- **递归目录处理**：自动处理项目中所有子目录的代码文件
+- **详细日志输出**：提供详细的处理过程和结果统计
 - **变量重命名**：将有意义的变量名替换为无意义的短名称
-- **死代码注入**：插入永远不会执行的代码片段迷惑分析者
-- **字符串加密**：对字符串进行加密处理，运行时解密
-- **控制流扁平化**：重构代码的控制流使其难以理解
-- **自定义混淆规则**：根据需求自定义混淆级别和规则
-- **支持 Vue2 和 Vue3**：兼容不同版本的 Vue 框架
-- **webpack 插件支持**：无缝集成到 webpack 构建流程
+- **字符串混淆**：将字符串转换为数组形式增加代码分析难度
 
 ## 安装
 
 ```bash
-npm install vue-code-obfuscation --save-dev
+# 全局安装
+npm install -g vue-code-obfuscation
+
 # 或使用 yarn
-yarn add vue-code-obfuscation --dev
+yarn global add vue-code-obfuscation
 ```
 
 ## 基本使用
 
-### 在 Vue CLI 项目中使用
+```bash
+# 基本用法 - 处理指定文件夹中的所有 Vue 和 JS 文件
+zjcodetime <文件夹路径>
 
-在`vue.config.js`中配置：
-
-```js
-const VueObfuscator = require("vue-code-obfuscation");
-
-module.exports = {
-  configureWebpack: {
-    plugins: [
-      new VueObfuscator({
-        // 混淆配置选项
-        compact: true,
-        controlFlowFlattening: true,
-        // 更多配置...
-      }),
-    ],
-  },
-};
+# 创建备份
+zjcodetime <文件夹路径> --backup
 ```
 
-### 在 Webpack 中使用
+### 示例
 
-```js
-const VueObfuscator = require("vue-code-obfuscation");
+```bash
+# 处理当前目录下的 src 文件夹
+zjcodetime ./src
 
-module.exports = {
-  // webpack配置
-  plugins: [
-    new VueObfuscator({
-      // 混淆配置选项
-    }),
-  ],
-};
+# 处理并创建备份
+zjcodetime ./dist --backup
 ```
 
-## 配置选项
+## 混淆配置
 
-| 选项                           | 类型    | 默认值 | 描述                         |
-| ------------------------------ | ------- | ------ | ---------------------------- |
-| compact                        | Boolean | true   | 压缩代码，移除空白字符和注释 |
-| controlFlowFlattening          | Boolean | false  | 控制流扁平化                 |
-| controlFlowFlatteningThreshold | Number  | 0.75   | 控制流扁平化应用比例         |
-| stringArray                    | Boolean | true   | 将字符串提取到单独的数组中   |
-| stringArrayEncoding            | String  | false  | 字符串数组编码方式           |
-| ...                            | ...     | ...    | ...                          |
+工具使用以下预设混淆配置：
+
+- 代码压缩
+- 标识符重命名 (使用十六进制命名方式)
+- 字符串转数组处理
+- 代码简化优化
+
+对于检测到的复杂 Vue 组件（如使用 JSX 或复杂渲染函数），工具会自动切换到安全模式进行混淆，确保代码功能正常。
 
 ## 最佳实践
 
-- 仅在生产环境启用混淆，开发环境保持代码可读性
-- 根据应用性能要求调整混淆级别
+- 混淆前先备份原始文件 (使用 `--backup` 选项)
 - 混淆后测试应用各项功能确保无误
+- 仅对生产环境的代码进行混淆处理
 
 ## 常见问题
 
 **Q: 混淆后应用性能会下降吗？**
 
-A: 取决于混淆配置，强度越高可能对性能影响越大。建议进行性能测试。
+A: 工具默认配置对性能影响较小，但会增加代码体积。
 
-**Q: 能 100%防止代码被逆向工程吗？**
+**Q: 为什么有些文件混淆失败？**
 
-A: 混淆只能增加逆向工程的难度，无法完全防止。它是安全策略的补充而非替代。
+A: 某些复杂的语法结构或特殊情况可能导致混淆失败。工具会跳过这些文件并保持原样，同时在日志中记录错误信息。
 
 ## 许可证
 
